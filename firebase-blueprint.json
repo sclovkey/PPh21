@@ -1,0 +1,50 @@
+{
+  "entities": {
+    "employee": {
+      "title": "Employee",
+      "description": "Employee basic information and tax status.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Full name of the employee" },
+        "npwp": { "type": "string", "description": "Tax ID number (NPWP)" },
+        "status": { "type": "string", "enum": ["TK/0", "TK/1", "TK/2", "TK/3", "K/0", "K/1", "K/2", "K/3"], "description": "Tax status for PTKP" },
+        "category": { "type": "string", "enum": ["A", "B", "C"], "description": "TER Category based on status" },
+        "joinDate": { "type": "string", "format": "date", "description": "Employment start date" },
+        "resignDate": { "type": "string", "format": "date", "description": "Employment end date if applicable" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "status"]
+    },
+    "salaryData": {
+      "title": "Salary Data",
+      "description": "Monthly income and tax calculation record.",
+      "type": "object",
+      "properties": {
+        "employeeId": { "type": "string" },
+        "month": { "type": "number", "description": "Month (1-12)" },
+        "year": { "type": "number", "description": "Year (e.g., 2024)" },
+        "salary": { "type": "number", "description": "Basic salary" },
+        "allowance": { "type": "number", "description": "Regular allowances" },
+        "bonus": { "type": "number", "description": "Bonuses" },
+        "thr": { "type": "number", "description": "THR or religious holiday allowance" },
+        "totalGross": { "type": "number", "description": "Total gross income (Salary + Allowance + Bonus + THR)" },
+        "pph21": { "type": "number", "description": "Calculated PPh 21 for the month" },
+        "calculationMethod": { "type": "string", "enum": ["TER", "PROGRESSIVE"], "description": "Method used: TER for Jan-Nov, Progressive for Dec" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["employeeId", "month", "year", "salary"]
+    }
+  },
+  "firestore": {
+    "/employees/{employeeId}": {
+      "schema": "employee",
+      "description": "Store individual employee profiles"
+    },
+    "/employees/{employeeId}/salaries/{salaryId}": {
+      "schema": "salaryData",
+      "description": "Store monthly salary and tax calculations per employee"
+    }
+  }
+}

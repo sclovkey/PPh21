@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Employee validation
+    function isValidEmployee(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.status in ['TK/0', 'TK/1', 'TK/2', 'TK/3', 'K/0', 'K/1', 'K/2', 'K/3'];
+    }
+
+    // Salary Data validation
+    function isValidSalary(data) {
+      return data.employeeId is string &&
+             data.month >= 1 && data.month <= 12 &&
+             data.year >= 2020 && data.year <= 2100 &&
+             data.salary >= 0 &&
+             data.allowance >= 0 &&
+             data.bonus >= 0 &&
+             data.thr >= 0;
+    }
+
+    match /employees/{employeeId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidEmployee(incoming());
+      allow update: if isSignedIn() && isValidEmployee(incoming()) && (
+        incoming().diff(existing()).affectedKeys().hasOnly(['name', 'npwp', 'status', 'category', 'joinDate', 'resignDate', 'updatedAt'])
+      );
+      allow delete: if isSignedIn();
+
+      match /salaries/{salaryId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && isValidSalary(incoming());
+        allow update: if isSignedIn() && isValidSalary(incoming()) && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['salary', 'allowance', 'bonus', 'thr', 'totalGross', 'pph21', 'calculationMethod', 'updatedAt', 'month', 'year', 'employeeId'])
+        );
+        allow delete: if isSignedIn();
+      }
+    }
+  }
+}

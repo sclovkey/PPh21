@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-[#f0f0f0] text-[#1a1a1a] font-sans antialiased;
+  }
+}
+
+@layer components {
+  .brutal-card {
+    @apply bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px];
+  }
+  
+  .brutal-button {
+    @apply bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 font-bold transition-all active:shadow-none active:translate-x-[4px] active:translate-y-[4px] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .brutal-input {
+    @apply border-2 border-black p-2 focus:outline-none focus:bg-[#e0e0e0] transition-colors;
+  }
+
+  .brutal-select {
+    @apply border-2 border-black p-2 focus:outline-none focus:bg-[#e0e0e0] transition-colors bg-white;
+  }
+}

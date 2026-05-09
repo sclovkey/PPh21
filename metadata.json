@@ -1,0 +1,6 @@
+{
+  "name": "Kalkulator PPh 21 TER",
+  "description": "Sistem perhitungan PPh 21 karyawan menggunakan metode TER (Jan-Nov) dan perhitungan tahunan progresif (Desember).",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
